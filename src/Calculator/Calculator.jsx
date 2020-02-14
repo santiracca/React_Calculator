@@ -3,85 +3,117 @@ import Display from "../Display/Display";
 import "./Calculator.css";
 import Button from "../Button/Button";
 
+const INITIAL_STATE = {
+  totalValue: null,
+  displayValue: "0",
+  operation: null
+};
+
+const operationHelper = (num1, num2, operationType) => {
+  if (operationType === "add") {
+    return num1 + num2;
+  } else if (operationType === "substract") {
+    return num1 - num2;
+  } else if (operationType === "divide") {
+    return num1 / num2;
+  } else {
+    return num1 * num2;
+  }
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_DISPLAY_VALUE":
+      let newValue =
+        state.displayValue !== "0"
+          ? `${state.displayValue}${action.value}`
+          : action.value;
+      return {
+        ...state,
+        displayValue: newValue
+      };
+    case "CLEAR_ALL_VALUES": {
+      return INITIAL_STATE;
+    }
+    case "HANDLE_DELETE_VALUES": {
+      let newDisplayValue =
+        state.displayValue.length !== 1 ? state.displayValue.slice(0, -1) : "0";
+      return {
+        ...state,
+        displayValue: newDisplayValue.toString()
+      };
+    }
+    case "SET_DECIMAL": {
+      let newDisplayValue;
+      if (!state.displayValue.includes(".")) {
+        newDisplayValue = `${state.displayValue}.`;
+      }
+      return {
+        ...state,
+        displayValue: newDisplayValue
+      };
+    }
+    case "SET_PERCENTAGE":
+      let newDisplayValue = +state.displayValue;
+      return {
+        ...state,
+        displayValue: (newDisplayValue * 0.01).toString()
+      };
+    case "SET_OPERATION":
+      let newTotal;
+      if (state.totalValue) {
+        newTotal = operationHelper(
+          state.totalValue,
+          +state.displayValue,
+          state.operation
+        );
+      } else {
+        newTotal = +state.displayValue;
+      }
+      return {
+        total: newTotal,
+        operation: action.operationType,
+        displayValue: "0"
+      };
+
+    case "SET_EQUAL":
+      if (state.operation) {
+        const newTotal = operationHelper(
+          state.totalValue,
+          +state.displayValue,
+          state.operation
+        ).toString();
+        return {
+          totalValue: null,
+          displayValue: newTotal,
+          operation: null
+        };
+      }
+      break;
+    default:
+      return state;
+  }
+};
+
 const Calculator = () => {
-  ///STATE VARIABLES
-  const [totalValue, setTotalValue] = useState(null);
-  const [displayValue, setDisplayValue] = useState("0");
-  const [operation, setOperation] = useState(null);
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const { displayValue } = state;
 
-  //FUNCTION TO ADD A NUMBER TO THE DISPLAY
-  const handleNumberInput = numberValue => {
-    setDisplayValue(
-      displayValue !== "0" ? `${displayValue}${numberValue}` : numberValue
-    );
-  };
+  const handleNumberInput = numberValue =>
+    dispatch({ type: "SET_DISPLAY_VALUE", value: numberValue });
 
-  //FUNCTION TO CLEAR ALL ALL INPUT AND RESET THE STATE
-  const handleClear = () => {
-    setDisplayValue("0");
-    setOperation(null);
-    setTotalValue(null);
-  };
+  const handleClear = () => dispatch({ type: "CLEAR_ALL_VALUES" });
 
-  //FUNCTION TO DELETE THE LAST ELEMENT FROM THE STRING
-  const handleDelete = () => {
-    setDisplayValue(
-      displayValue.length !== 1 ? displayValue.slice(0, -1) : "0"
-    );
-  };
+  const handleDelete = () => dispatch({ type: "HANDLE_DELETE_VALUE" });
 
-  //FUNCTION TO RETURN THE ONE PERCENT OF THE CURRENT DISPLAY VALUE
-  const handlePercentage = () => {
-    const valueToBeOperated = +displayValue;
-    if (valueToBeOperated) {
-      setDisplayValue((valueToBeOperated * 0.01).toString());
-    }
-  };
+  const handlePercentage = () => dispatch({ type: "SET_PERCENTAGE" });
 
-  //FUNCTION TO ADD A DECIMAL POINT TO THE THE DISPLAY VALUE
-  const handleDecimal = () => {
-    if (!displayValue.includes(".")) {
-      setDisplayValue(`${displayValue}.`);
-    }
-  };
+  const handleDecimal = () => dispatch({ type: "SET_DECIMAL" });
 
-  //FUNCTION SET THE CURRENT OPERATION TYPE
-  //IN CASE OF MULTIPLE OPERATIONS, THE FUNCTION WILL FIRST USE THE CURRENT OPERATION TYPE TO OPERATE ON THE TOTAL VALUE IN THE STATE
-  // AND THEN SET THE NEW OPERATION TYPE
-  const handleOperation = operationType => {
-    if (totalValue) {
-      setTotalValue(operationHelper(totalValue, +displayValue, operation));
-      setOperation(operationType);
-      setDisplayValue("0");
-    } else {
-      setTotalValue(+displayValue);
-      setOperation(operationType);
-      setDisplayValue("0");
-    }
-  };
+  const handleOperation = operationType =>
+    dispatch({ type: "SET_OPERATION", operationType });
 
-  //FUNCTION TO RETURN THE TOTAL VALUE
-  const handleEquals = () => {
-    if (operation) {
-      const total = operationHelper(totalValue, +displayValue, operation);
-      setDisplayValue(total.toString());
-      setTotalValue(null);
-      setOperation(null);
-    }
-  };
-
-  //HELPER FUNCTION TO DETERMINE THE TYPE OF OPERATION TO PERFORM
-  const operationHelper = (num1, num2, operationType) => {
-    if (operationType === "add") {
-      return num1 + num2;
-    } else if (operationType === "substract") {
-      return num1 - num2;
-    } else if (operationType === "divide") {
-      return num1 / num2;
-    } else {
-      return num1 * num2;
-    }
-  };
+  const handleEquals = () => dispatch({ type: "SET_EQUAL" });
 
   return (
     <div className='Calculator'>

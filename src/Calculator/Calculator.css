@@ -1,0 +1,19 @@
+
+.Calculator {
+  background-color: black;
+  height: 350px;
+  width: 250px;
+  max-width: 250px;
+  margin-top: 10px;
+  border-radius: 12%;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.Calculator-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

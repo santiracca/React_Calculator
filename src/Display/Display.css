@@ -1,0 +1,13 @@
+
+.Display {
+  background-image: linear-gradient(45deg, #424242, #868585);
+  height: 50px;
+  max-width: 100;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  color: white;
+  font-size: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  overflow: hidden;
+}

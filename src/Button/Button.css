@@ -1,0 +1,12 @@
+
+.Button {
+  
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 2rem;
+  margin: 5px;
+  border: none;
+  
+}

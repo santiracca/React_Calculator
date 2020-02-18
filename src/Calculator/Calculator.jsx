@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import Display from "../Display/Display";
 import "./Calculator.css";
 import Button from "../Button/Button";
@@ -35,9 +35,10 @@ const reducer = (state, action) => {
     case "CLEAR_ALL_VALUES": {
       return INITIAL_STATE;
     }
-    case "HANDLE_DELETE_VALUES": {
+    case "HANDLE_DELETE_VALUE": {
       let newDisplayValue =
         state.displayValue.length !== 1 ? state.displayValue.slice(0, -1) : "0";
+
       return {
         ...state,
         displayValue: newDisplayValue.toString()
@@ -71,7 +72,7 @@ const reducer = (state, action) => {
         newTotal = +state.displayValue;
       }
       return {
-        total: newTotal,
+        totalValue: newTotal,
         operation: action.operationType,
         displayValue: "0"
       };
@@ -119,66 +120,51 @@ const Calculator = () => {
     <div className='Calculator'>
       <Display>{displayValue}</Display>
       <div className='Calculator-row'>
-        <Button isGrey clearValues={handleClear}>
+        <Button isGrey click={handleClear}>
           C
         </Button>
-        <Button isGrey deleteValue={handleDelete}>
+        <Button isGrey click={handleDelete}>
           ␡
         </Button>
-        <Button isGrey handlePercent={handlePercentage}>
+        <Button isGrey click={handlePercentage}>
           %
         </Button>
-        <Button isOrange onDivide={() => handleOperation("divide")}>
+        <Button isOrange click={() => handleOperation("divide")}>
           ÷
         </Button>
       </div>
       <div className='Calculator-row'>
-        <Button
-          onParty={() => {
-            console.log("handle it: ", 7);
-          }}
-          addToDisplay={() => handleNumberInput("7")}
-        >
-          7
-        </Button>
-        <Button
-          onParty={() => {
-            console.log("handle it: ", 8);
-          }}
-          addToDisplay={() => handleNumberInput("8")}
-        >
-          8
-        </Button>
-        <Button addToDisplay={() => handleNumberInput("9")}>9</Button>
-        <Button isOrange onMultiply={() => handleOperation("multiply")}>
+        <Button click={() => handleNumberInput("7")}>7</Button>
+        <Button click={() => handleNumberInput("8")}>8</Button>
+        <Button click={() => handleNumberInput("9")}>9</Button>
+        <Button isOrange click={() => handleOperation("multiply")}>
           X
         </Button>
       </div>
       <div className='Calculator-row'>
-        <Button addToDisplay={() => handleNumberInput("4")}>4</Button>
-        <Button addToDisplay={() => handleNumberInput("5")}>5</Button>
-        <Button addToDisplay={() => handleNumberInput("6")}>6</Button>
-        <Button isOrange onSubstract={() => handleOperation("substract")}>
+        <Button click={() => handleNumberInput("4")}>4</Button>
+        <Button click={() => handleNumberInput("5")}>5</Button>
+        <Button click={() => handleNumberInput("6")}>6</Button>
+        <Button isOrange click={() => handleOperation("substract")}>
           -
         </Button>
       </div>
       <div className='Calculator-row'>
-        <Button addToDisplay={() => handleNumberInput("1")}>1</Button>
-        <Button addToDisplay={() => handleNumberInput("2")}>2</Button>
-        <Button addToDisplay={() => handleNumberInput("3")}>3</Button>
-        <Button isOrange onAdd={() => handleOperation("add")}>
+        <Button click={() => handleNumberInput("1")}>1</Button>
+        <Button click={() => handleNumberInput("2")}>2</Button>
+        <Button click={() => handleNumberInput("3")}>3</Button>
+        <Button isOrange click={() => handleOperation("add")}>
           +
         </Button>
       </div>
       <div className='Calculator-row'>
-        <Button isZero addToDisplay={() => handleNumberInput("0")}>
+        <Button isZero click={() => handleNumberInput("0")}>
           0
         </Button>
-        <Button onDecimal={handleDecimal}>.</Button>
-        <Button isOrange onEquals={handleEquals}>
+        <Button click={handleDecimal}>.</Button>
+        <Button isOrange click={handleEquals}>
           =
         </Button>
-        <pre>{JSON.stringify({}, null, 2)}</pre>
       </div>
     </div>
   );

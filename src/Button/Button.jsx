@@ -1,46 +1,9 @@
 import React from "react";
 import "./Button.css";
 
-const Button = ({
-  children,
-  isZero,
-  addToDisplay,
-  clearValues,
-  deleteValue,
-  handlePercent,
-  onDecimal,
-  onDivide,
-  onMultiply,
-  onSubstract,
-  onAdd,
-  onEquals,
-  isGrey,
-  isOrange,
-  onParty
-}) => {
-  //FUNCTION TO DETERMINE WHAT TYPE OF PROP EVENT GETS EXECUTED IN THE ON CLICK EVENT
+const Button = ({ children, isZero, click, isGrey, isOrange }) => {
   const handleClick = () => {
-    if (addToDisplay) {
-      addToDisplay();
-    } else if (clearValues) {
-      clearValues();
-    } else if (deleteValue) {
-      deleteValue();
-    } else if (handlePercent) {
-      handlePercent();
-    } else if (onDecimal) {
-      onDecimal();
-    } else if (onDivide) {
-      onDivide();
-    } else if (onMultiply) {
-      onMultiply();
-    } else if (onSubstract) {
-      onSubstract();
-    } else if (onAdd) {
-      onAdd();
-    } else {
-      onEquals();
-    }
+    click();
   };
 
   //FUNCTION TO SET THE BACKGROUND COLOR OF THE BUTTON

@@ -32,7 +32,7 @@ const Calculator = () => {
 
   //FUNCTION TO RETURN THE ONE PERCENT OF THE CURRENT DISPLAY VALUE
   const handlePercentage = () => {
-    const valueToBeOperated = +displayValue;
+    const valueToBeOperated = parseFloat(displayValue);
     if (valueToBeOperated) {
       setDisplayValue((valueToBeOperated * 0.01).toString());
     }
@@ -50,11 +50,13 @@ const Calculator = () => {
   // AND THEN SET THE NEW OPERATION TYPE
   const handleOperation = operationType => {
     if (totalValue) {
-      setTotalValue(operationHelper(totalValue, +displayValue, operation));
+      setTotalValue(
+        resolvePendingOperation(totalValue, parseFloat(displayValue), operation)
+      );
       setOperation(operationType);
       setDisplayValue("0");
     } else {
-      setTotalValue(+displayValue);
+      setTotalValue(parseFloat(displayValue));
       setOperation(operationType);
       setDisplayValue("0");
     }
@@ -63,7 +65,11 @@ const Calculator = () => {
   //FUNCTION TO RETURN THE TOTAL VALUE
   const handleEquals = () => {
     if (operation) {
-      const total = operationHelper(totalValue, +displayValue, operation);
+      const total = resolvePendingOperation(
+        totalValue,
+        parseFloat(displayValue),
+        operation
+      );
       setDisplayValue(total.toString());
       setTotalValue(null);
       setOperation(null);
@@ -71,7 +77,7 @@ const Calculator = () => {
   };
 
   //HELPER FUNCTION TO DETERMINE THE TYPE OF OPERATION TO PERFORM
-  const operationHelper = (num1, num2, operationType) => {
+  const resolvePendingOperation = (num1, num2, operationType) => {
     if (operationType === "add") {
       return num1 + num2;
     } else if (operationType === "substract") {

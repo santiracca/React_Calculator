@@ -55,21 +55,21 @@ const reducer = (state, action) => {
       };
     }
     case "SET_PERCENTAGE":
-      let newDisplayValue = +state.displayValue;
+      let newDisplayValue = parseFloat(state.displayValue);
       return {
         ...state,
         displayValue: (newDisplayValue * 0.01).toString()
       };
-    case "SET_PENDING_OPERATION":
+    case "SET_OPERATION":
       let newTotal;
       if (state.totalValue) {
         newTotal = resolvePendingOperation(
           state.totalValue,
-          +state.displayValue,
+          parseFloat(state.displayValue),
           state.operation
         );
       } else {
-        newTotal = +state.displayValue;
+        newTotal = parseFloat(state.displayValue);
       }
       return {
         totalValue: newTotal,
@@ -81,7 +81,7 @@ const reducer = (state, action) => {
       if (state.operation) {
         const newTotal = resolvePendingOperation(
           state.totalValue,
-          +state.displayValue,
+          parseFloat(state.displayValue),
           state.operation
         ).toString();
         return {
@@ -112,7 +112,7 @@ const Calculator = () => {
   const handleDecimal = () => dispatch({ type: "SET_DECIMAL" });
 
   const handleOperation = operationType =>
-    dispatch({ type: "SET_PENDING_OPERATION", operationType });
+    dispatch({ type: "SET_OPERATION", operationType });
 
   const handleEquals = () => dispatch({ type: "SET_EQUAL" });
 

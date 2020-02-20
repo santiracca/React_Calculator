@@ -1,9 +1,9 @@
 import React from "react";
 import "./Button.css";
 
-const Button = ({ children, isZero, click, isGrey, isOrange }) => {
+const Button = ({ children, isZero, onClick, isGrey, isOrange }) => {
   const handleClick = () => {
-    click();
+    onClick();
   };
 
   //FUNCTION TO SET THE BACKGROUND COLOR OF THE BUTTON
@@ -12,18 +12,20 @@ const Button = ({ children, isZero, click, isGrey, isOrange }) => {
       return "#A5A6A6";
     } else if (isOrange) {
       return "#ff9e0a";
+    } else {
+      return "#333333";
     }
   };
 
   const style = {
     color: isGrey ? "#000" : "#fff",
-    backgroundColor: isOrange || isGrey ? buttonColor() : "#333333",
+    backgroundColor: buttonColor(),
     width: isZero ? "100px" : "50px",
     borderRadius: isZero ? "30px" : "50%"
   };
 
   return (
-    <button onClick={handleClick} style={style} className='Button'>
+    <button onClick={handleClick} style={style} className="Button">
       {children}
     </button>
   );

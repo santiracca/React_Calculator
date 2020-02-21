@@ -9,7 +9,7 @@ const INITIAL_STATE = {
   operation: null
 };
 
-const operationHelper = (num1, num2, operationType) => {
+const resolvePendingOperation = (num1, num2, operationType) => {
   if (operationType === "add") {
     return num1 + num2;
   } else if (operationType === "substract") {
@@ -55,7 +55,7 @@ const reducer = (state, action) => {
       };
     }
     case "SET_PERCENTAGE":
-      let newDisplayValue = +state.displayValue;
+      let newDisplayValue = parseFloat(state.displayValue);
       return {
         ...state,
         displayValue: (newDisplayValue * 0.01).toString()
@@ -63,13 +63,13 @@ const reducer = (state, action) => {
     case "SET_OPERATION":
       let newTotal;
       if (state.totalValue) {
-        newTotal = operationHelper(
+        newTotal = resolvePendingOperation(
           state.totalValue,
-          +state.displayValue,
+          parseFloat(state.displayValue),
           state.operation
         );
       } else {
-        newTotal = +state.displayValue;
+        newTotal = parseFloat(state.displayValue);
       }
       return {
         totalValue: newTotal,
@@ -79,9 +79,9 @@ const reducer = (state, action) => {
 
     case "SET_EQUAL":
       if (state.operation) {
-        const newTotal = operationHelper(
+        const newTotal = resolvePendingOperation(
           state.totalValue,
-          +state.displayValue,
+          parseFloat(state.displayValue),
           state.operation
         ).toString();
         return {
@@ -117,52 +117,52 @@ const Calculator = () => {
   const handleEquals = () => dispatch({ type: "SET_EQUAL" });
 
   return (
-    <div className='Calculator'>
+    <div className="Calculator">
       <Display>{displayValue}</Display>
-      <div className='Calculator-row'>
-        <Button isGrey click={handleClear}>
+      <div className="Calculator-row">
+        <Button isGrey onClick={handleClear}>
           C
         </Button>
-        <Button isGrey click={handleDelete}>
+        <Button isGrey onClick={handleDelete}>
           ␡
         </Button>
-        <Button isGrey click={handlePercentage}>
+        <Button isGrey onClick={handlePercentage}>
           %
         </Button>
-        <Button isOrange click={() => handleOperation("divide")}>
+        <Button isOrange onClick={() => handleOperation("divide")}>
           ÷
         </Button>
       </div>
-      <div className='Calculator-row'>
-        <Button click={() => handleNumberInput("7")}>7</Button>
-        <Button click={() => handleNumberInput("8")}>8</Button>
-        <Button click={() => handleNumberInput("9")}>9</Button>
-        <Button isOrange click={() => handleOperation("multiply")}>
+      <div className="Calculator-row">
+        <Button onClick={() => handleNumberInput("7")}>7</Button>
+        <Button onClick={() => handleNumberInput("8")}>8</Button>
+        <Button onClick={() => handleNumberInput("9")}>9</Button>
+        <Button isOrange onClick={() => handleOperation("multiply")}>
           X
         </Button>
       </div>
-      <div className='Calculator-row'>
-        <Button click={() => handleNumberInput("4")}>4</Button>
-        <Button click={() => handleNumberInput("5")}>5</Button>
-        <Button click={() => handleNumberInput("6")}>6</Button>
-        <Button isOrange click={() => handleOperation("substract")}>
+      <div className="Calculator-row">
+        <Button onClick={() => handleNumberInput("4")}>4</Button>
+        <Button onClick={() => handleNumberInput("5")}>5</Button>
+        <Button onClick={() => handleNumberInput("6")}>6</Button>
+        <Button isOrange onClick={() => handleOperation("substract")}>
           -
         </Button>
       </div>
-      <div className='Calculator-row'>
-        <Button click={() => handleNumberInput("1")}>1</Button>
-        <Button click={() => handleNumberInput("2")}>2</Button>
-        <Button click={() => handleNumberInput("3")}>3</Button>
-        <Button isOrange click={() => handleOperation("add")}>
+      <div className="Calculator-row">
+        <Button onClick={() => handleNumberInput("1")}>1</Button>
+        <Button onClick={() => handleNumberInput("2")}>2</Button>
+        <Button onClick={() => handleNumberInput("3")}>3</Button>
+        <Button isOrange onClick={() => handleOperation("add")}>
           +
         </Button>
       </div>
-      <div className='Calculator-row'>
-        <Button isZero click={() => handleNumberInput("0")}>
+      <div className="Calculator-row">
+        <Button isZero onClick={() => handleNumberInput("0")}>
           0
         </Button>
-        <Button click={handleDecimal}>.</Button>
-        <Button isOrange click={handleEquals}>
+        <Button onClick={handleDecimal}>.</Button>
+        <Button isOrange onClick={handleEquals}>
           =
         </Button>
       </div>

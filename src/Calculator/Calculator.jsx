@@ -32,7 +32,7 @@ const Calculator = () => {
 
   //FUNCTION TO RETURN THE ONE PERCENT OF THE CURRENT DISPLAY VALUE
   const handlePercentage = () => {
-    const valueToBeOperated = +displayValue;
+    const valueToBeOperated = parseFloat(displayValue);
     if (valueToBeOperated) {
       setDisplayValue((valueToBeOperated * 0.01).toString());
     }
@@ -50,11 +50,13 @@ const Calculator = () => {
   // AND THEN SET THE NEW OPERATION TYPE
   const handleOperation = operationType => {
     if (totalValue) {
-      setTotalValue(operationHelper(totalValue, +displayValue, operation));
+      setTotalValue(
+        resolvePendingOperation(totalValue, parseFloat(displayValue), operation)
+      );
       setOperation(operationType);
       setDisplayValue("0");
     } else {
-      setTotalValue(+displayValue);
+      setTotalValue(parseFloat(displayValue));
       setOperation(operationType);
       setDisplayValue("0");
     }
@@ -63,7 +65,11 @@ const Calculator = () => {
   //FUNCTION TO RETURN THE TOTAL VALUE
   const handleEquals = () => {
     if (operation) {
-      const total = operationHelper(totalValue, +displayValue, operation);
+      const total = resolvePendingOperation(
+        totalValue,
+        parseFloat(displayValue),
+        operation
+      );
       setDisplayValue(total.toString());
       setTotalValue(null);
       setOperation(null);
@@ -71,7 +77,7 @@ const Calculator = () => {
   };
 
   //HELPER FUNCTION TO DETERMINE THE TYPE OF OPERATION TO PERFORM
-  const operationHelper = (num1, num2, operationType) => {
+  const resolvePendingOperation = (num1, num2, operationType) => {
     if (operationType === "add") {
       return num1 + num2;
     } else if (operationType === "substract") {
@@ -84,66 +90,52 @@ const Calculator = () => {
   };
 
   return (
-    <div className='Calculator'>
+    <div className="Calculator">
       <Display>{displayValue}</Display>
-      <div className='Calculator-row'>
-        <Button isGrey clearValues={handleClear}>
+      <div className="Calculator-row">
+        <Button isGrey onClick={handleClear}>
           C
         </Button>
-        <Button isGrey deleteValue={handleDelete}>
+        <Button isGrey onClick={handleDelete}>
           ␡
         </Button>
-        <Button isGrey handlePercent={handlePercentage}>
+        <Button isGrey onClick={handlePercentage}>
           %
         </Button>
-        <Button isOrange onDivide={() => handleOperation("divide")}>
+        <Button isOrange onClick={() => handleOperation("divide")}>
           ÷
         </Button>
       </div>
-      <div className='Calculator-row'>
-        <Button
-          onParty={() => {
-            console.log("handle it: ", 7);
-          }}
-          addToDisplay={() => handleNumberInput("7")}
-        >
-          7
-        </Button>
-        <Button
-          onParty={() => {
-            console.log("handle it: ", 8);
-          }}
-          addToDisplay={() => handleNumberInput("8")}
-        >
-          8
-        </Button>
-        <Button addToDisplay={() => handleNumberInput("9")}>9</Button>
-        <Button isOrange onMultiply={() => handleOperation("multiply")}>
+      <div className="Calculator-row">
+        <Button onClick={() => handleNumberInput("7")}>7</Button>
+        <Button onClick={() => handleNumberInput("8")}>8</Button>
+        <Button onClick={() => handleNumberInput("9")}>9</Button>
+        <Button isOrange onClick={() => handleOperation("multiply")}>
           X
         </Button>
       </div>
-      <div className='Calculator-row'>
-        <Button addToDisplay={() => handleNumberInput("4")}>4</Button>
-        <Button addToDisplay={() => handleNumberInput("5")}>5</Button>
-        <Button addToDisplay={() => handleNumberInput("6")}>6</Button>
-        <Button isOrange onSubstract={() => handleOperation("substract")}>
+      <div className="Calculator-row">
+        <Button onClick={() => handleNumberInput("4")}>4</Button>
+        <Button onClick={() => handleNumberInput("5")}>5</Button>
+        <Button onClick={() => handleNumberInput("6")}>6</Button>
+        <Button isOrange onClick={() => handleOperation("substract")}>
           -
         </Button>
       </div>
-      <div className='Calculator-row'>
-        <Button addToDisplay={() => handleNumberInput("1")}>1</Button>
-        <Button addToDisplay={() => handleNumberInput("2")}>2</Button>
-        <Button addToDisplay={() => handleNumberInput("3")}>3</Button>
-        <Button isOrange onAdd={() => handleOperation("add")}>
+      <div className="Calculator-row">
+        <Button onClick={() => handleNumberInput("1")}>1</Button>
+        <Button onClick={() => handleNumberInput("2")}>2</Button>
+        <Button onClick={() => handleNumberInput("3")}>3</Button>
+        <Button isOrange onClick={() => handleOperation("add")}>
           +
         </Button>
       </div>
-      <div className='Calculator-row'>
-        <Button isZero addToDisplay={() => handleNumberInput("0")}>
+      <div className="Calculator-row">
+        <Button isZero onClick={() => handleNumberInput("0")}>
           0
         </Button>
-        <Button onDecimal={handleDecimal}>.</Button>
-        <Button isOrange onEquals={handleEquals}>
+        <Button onClick={handleDecimal}>.</Button>
+        <Button isOrange onClick={handleEquals}>
           =
         </Button>
         <pre>{JSON.stringify({}, null, 2)}</pre>
